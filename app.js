@@ -25,12 +25,13 @@ async function signAndPermit() {
     const digest = getPermitDigest(approve,0,deadline)
     console.log(digest)
     console.log('digest'+digest)
-    const res = await web3.eth.sign(digest,approve.owner)
-    const r = res.slice(0, 66)
-    const s = '0x'+res.slice(66, 130)
-    const v = parseInt(res.slice(130, 132), 16)
+    const {v,r,s} = web3.eth.accounts.sign(digest,'e73de1205f0146c16f00c748709760a345f152660a2e7af5abf6a61048b9554b')
+    // console.log(res)
+    // const r = res.slice(0, 66)
+    // const s = '0x'+res.slice(66, 130)
+    const vUint = parseInt(v, 16)
     console.log(v.toString(),r.toString(),s.toString())
-    const receipt = await usdcContract.methods.permit(approve.owner, approve.spender, approve.value, deadline, v, r, s).send({from: approve.spender})
+    const receipt = await usdcContract.methods.permit(approve.owner, approve.spender, approve.value, deadline, vUint, r, s).send({from: approve.spender})
     
 }
 
